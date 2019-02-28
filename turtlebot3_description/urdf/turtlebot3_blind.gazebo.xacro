@@ -187,4 +187,20 @@
     </sensor>
   </gazebo>
 
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+     <robotNamespace>/camera_joint_model</robotNamespace>
+     <!--<robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>-->
+    </plugin>
+  </gazebo>
+  <transmission name="base_to_camera_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+     <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="camera_joint">
+     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+   </transmission>
+
 </robot>

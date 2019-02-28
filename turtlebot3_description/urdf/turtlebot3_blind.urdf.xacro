@@ -190,15 +190,34 @@
     </inertial>
   </link>
 
-  <joint name="camera_joint" type="fixed">
+
+  <!-- I have added a person link/joint to put a model of the human (just visually, no inertias) -->
+  <!--
+  <link name="person_link">
+    <visual>
+     <origin xyz="-0.15 0 0" rpy="0 0 1.57"/>
+     <geometry>
+      <mesh filename="package://turtlebot3_gazebo/models/person_standing/meshes/standing.dae" />
+     </geometry>
+    </visual>
+  </link>
+
+  <joint name="person_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="person_link"/>
+  </joint>-->
+
+  <joint name="camera_joint" type="continuous">
     <origin xyz="0.064 -0.065 0.094" rpy="0 0 0"/>
     <parent link="base_link"/>
     <child link="camera_link"/>
+    <axis xyz="0 1 0"/>
   </joint>
 
   <link name="camera_link">
     <visual>
-     <origin xyz="0 0 0" rpy="1.57 0 1.57"/>
+     <origin xyz="-0.07 0.01 1.675" rpy="1.57 0 1.57"/>
       <geometry>
        <mesh filename="package://turtlebot3_description/meshes/sensors/r200.dae" />
       </geometry>
@@ -211,13 +230,13 @@
     </collision>
 
     <!-- This inertial field needs doesn't contain reliable data!! -->
-<!--   <inertial>
-      <mass value="0.564" />
+    <inertial>
+      <mass value="0.001" /> <!-- 0.564 -->
       <origin xyz="0 0 0" />
       <inertia ixx="0.003881243" ixy="0.0" ixz="0.0"
                iyy="0.000498940" iyz="0.0"
                izz="0.003879257" />
-    </inertial>-->
+    </inertial>
   </link>
 
   <joint name="camera_rgb_joint" type="fixed">

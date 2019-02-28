@@ -1,0 +1,10 @@
+camera_joint_model:
+    joint_state_controller:
+        type: joint_state_controller/JointStateController
+        publish_rate: 20
+
+camera_joint_model:
+    kinect_joint_controller:
+        type: effort_controllers/JointPositionController
+        joint: camera_joint
+        pid: {p: 0.001, i: 0.001, d: 0.01}
