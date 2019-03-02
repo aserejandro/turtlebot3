@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <robot name="turtlebot3_waffle" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find turtlebot3_description)/urdf/common_properties.xacro"/>
-  <xacro:include filename="$(find turtlebot3_description)/urdf/turtlebot3_waffle.gazebo.xacro"/>
+  <xacro:include filename="$(find turtlebot3_description)/urdf/turtlebot3_blind.gazebo.xacro"/>
 
   <xacro:property name="r200_cam_rgb_px" value="0.005"/>
   <xacro:property name="r200_cam_rgb_py" value="0.018"/>
@@ -190,37 +190,49 @@
     </inertial>
   </link>
 
+<joint name="head_joint" type="fixed">
+  <!--<origin xyz="0.064 -0.065 0.094" rpy="0 0 0"/>-->
+  <!--<origin xyz="-0.07 0.075 1.674" rpy="0 0 0"/>-->
+  <origin xyz="0.00 0.012 1.76" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="head_link"/>
+</joint>
 
-  <!-- I have added a person link/joint to put a model of the human (just visually, no inertias) -->
-  <!--
-  <link name="person_link">
-    <visual>
-     <origin xyz="-0.15 0 0" rpy="0 0 1.57"/>
-     <geometry>
-      <mesh filename="package://turtlebot3_gazebo/models/person_standing/meshes/standing.dae" />
-     </geometry>
-    </visual>
-  </link>
+<link name="head_link">
+  <origin xyz="0 0 0" rpy="0 0 0"/>
 
-  <joint name="person_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-    <parent link="base_footprint"/>
-    <child link="person_link"/>
-  </joint>-->
+  <!-- This inertial field needs doesn't contain reliable data!! -->
+  <inertial>
+    <mass value="0.001" /> <!-- 0.564 -->
+    <origin xyz="0 0 0" />
+    <inertia ixx="0.0" ixy="0.0" ixz="0.0"
+             iyy="0.0" iyz="0.0"
+             izz="0.0" />
+  </inertial>
+</link>
+
+
 
   <joint name="camera_joint" type="continuous">
-    <origin xyz="0.064 -0.065 0.094" rpy="0 0 0"/>
-    <parent link="base_link"/>
+    <!--<origin xyz="0.064 -0.065 0.094" rpy="0 0 0"/>-->
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="head_link"/>
     <child link="camera_link"/>
     <axis xyz="0 1 0"/>
   </joint>
 
   <link name="camera_link">
     <visual>
-     <origin xyz="-0.07 0.01 1.675" rpy="1.57 0 1.57"/>
+    <!--CAMERA ASUS-->
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+     <mesh filename="package://turtlebot3_gazebo/models/asus_xtion_pro_camera/meshes/asus_xtion_pro_camera.dae" />
+    </geometry>
+    <!--CAMERA REAL SENSE-->
+     <!--<origin xyz="-0.07 0.01 1.675" rpy="1.57 0 1.57"/>
       <geometry>
        <mesh filename="package://turtlebot3_description/meshes/sensors/r200.dae" />
-      </geometry>
+      </geometry>-->
     </visual>
     <collision>
       <origin xyz="0.003 0.065 0.007" rpy="0 0 0"/>
@@ -266,5 +278,31 @@
     <child link="camera_depth_optical_frame"/>
   </joint>
   <link name="camera_depth_optical_frame"/>
+
+
+  <!-- I have added a person link/joint to put a model of the human (just visually, no inertias) -->
+  <link name="person_link">
+    <visual>
+     <origin xyz="-0.15 0 0" rpy="0 0 1.57"/>
+     <geometry>
+      <mesh filename="package://turtlebot3_gazebo/models/person_standing/meshes/standing.dae" />
+     </geometry>
+    </visual>
+  </link>
+  <joint name="person_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="person_link"/>
+  </joint>
+
+  <transmission name="base_to_camera_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+     <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="camera_joint">
+     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+   </transmission>
 
 </robot>
